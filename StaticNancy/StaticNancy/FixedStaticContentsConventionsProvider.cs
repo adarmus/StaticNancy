@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Nancy;
-using StaticNancy.Content;
 
 namespace StaticNancy
 {
@@ -15,7 +14,7 @@ namespace StaticNancy
         {
             return new []
             {
-                StaticContentsConventionBuilder.AddDirectory("/Files", Assembly.GetAssembly(typeof (DummyClass)), "StaticNancy.Content.Files")
+                StaticContentsConventionBuilder.AddDirectory("/Files", Assembly.GetAssembly(typeof (FixedStaticContentsConventionsProvider)), "StaticNancy.Content.Files")
             };
         }
     }

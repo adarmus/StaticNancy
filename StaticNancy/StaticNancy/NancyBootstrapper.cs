@@ -7,7 +7,6 @@ using System.Text;
 using Nancy;
 using Nancy.Conventions;
 using StaticNancy.Config;
-using StaticNancy.Content;
 using StaticNancy.Logging;
 
 namespace StaticNancy
