@@ -13,6 +13,8 @@ namespace StaticNancy
 {
     public class NancyBootstrapper : DefaultNancyBootstrapper
     {
+        const string CONFIG_SECTION = "nancyService";
+
         readonly ITraceLogger _log;
 
         public NancyBootstrapper()
@@ -59,7 +61,7 @@ namespace StaticNancy
         {
             //return new FixedStaticContentsConventionsProvider();
 
-            var config = ConfigReader.GetConfigurationSection<NancyServiceConfigurationSection>("nancyService");
+            var config = ConfigReader.GetConfigurationSection<NancyServiceConfigurationSection>(CONFIG_SECTION);
             return new ConfigBasedStaticContentsConventionsProvider(_log, config);
         }
     }
