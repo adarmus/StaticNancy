@@ -10,11 +10,11 @@ namespace StaticNancy.Config
     class NancyServiceConfigurationSection : ConfigurationSection
     {
         [ConfigurationCollection(typeof(ResourceProviderCollection))]
-        [ConfigurationProperty("resourceProvider")]
+        [ConfigurationProperty("resourceProviders")]
         public ResourceProviderCollection ResourceProviders
         {
-            get { return (ResourceProviderCollection)this["resourceProvider"]; }
-            set { this["resourceProvider"] = value; }
+            get { return (ResourceProviderCollection)this["resourceProviders"]; }
+            set { this["resourceProviders"] = value; }
         }
     }
 }

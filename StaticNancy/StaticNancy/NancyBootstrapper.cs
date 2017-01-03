@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using Nancy;
 using Nancy.Conventions;
+using StaticNancy.Config;
 using StaticNancy.Content;
 using StaticNancy.Logging;
 
@@ -24,9 +25,19 @@ namespace StaticNancy
         {
             base.ConfigureConventions(nancyConventions);
 
-            var conventions = GetStaticContentsConventionsProvider()
-                .GetConventions()
-                .ToArray();
+            try
+            {
+                AddStaticConventions(nancyConventions);
+            }
+            catch (Exception ex)
+            {
+                _log.WriteLineError("An error occured configuring conventions", ex);
+            }
+        }
+
+        void AddStaticConventions(NancyConventions nancyConventions)
+        {
+            Func<NancyContext, string, Response>[] conventions = GetConventions();
 
             _log.WriteLineDebug("Adding {0} conventions", conventions.Length);
 
@@ -36,9 +47,21 @@ namespace StaticNancy
             }
         }
 
+        Func<NancyContext, string, Response>[] GetConventions()
+        {
+            var conventions = GetStaticContentsConventionsProvider()
+                .GetConventions()
+                .ToArray();
+
+            return conventions;
+        }
+
         IStaticContentsConventionsProvider GetStaticContentsConventionsProvider()
         {
-            return new FixedStaticContentsConventionsProvider();
+            //return new FixedStaticContentsConventionsProvider();
+
+            var config = ConfigReader.GetConfigurationSection<NancyServiceConfigurationSection>("nancyService");
+            return new ConfigBasedStaticContentsConventionsProvider(_log, config);
         }
     }
 }

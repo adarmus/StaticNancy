@@ -9,8 +9,6 @@ namespace StaticNancy.Config
 {
     static class ConfigReader
     {
-        public const string QUARTZ_SECTION_NAME = "nancyService";
-
         public static T GetConfigurationSection<T>(string sectionName) where T : class
         {
             object osection = ConfigurationManager.GetSection(sectionName);
