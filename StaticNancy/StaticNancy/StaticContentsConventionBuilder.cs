@@ -24,6 +24,7 @@ namespace StaticNancy
             return (context, _) =>
             {
                 var path = context.Request.Path;
+
                 Console.WriteLine(path);
 
                 if (!path.StartsWith(requestedPath))
