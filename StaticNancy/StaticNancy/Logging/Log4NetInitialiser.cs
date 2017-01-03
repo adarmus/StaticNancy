@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using log4net.Config;
 
-namespace StaticNancy
+namespace StaticNancy.Logging
 {
     class Log4NetInitialiser
     {
