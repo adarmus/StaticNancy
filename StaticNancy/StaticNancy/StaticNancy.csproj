@@ -46,6 +46,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceProcess" />
@@ -57,6 +58,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigBasedStaticContentsConventionsProvider.cs" />
+    <Compile Include="Config\ConfigReader.cs" />
+    <Compile Include="Config\NancyServiceConfigurationSection.cs" />
+    <Compile Include="Config\ResourceProviderCollection.cs" />
+    <Compile Include="Config\ResourceProviderElement.cs" />
     <Compile Include="FixedStaticContentsConventionsProvider.cs" />
     <Compile Include="IStaticContentsConventionsProvider.cs" />
     <Compile Include="Shell\ConsoleShell.cs" />
@@ -74,6 +80,7 @@
     </Compile>
     <Compile Include="StaticContentsConventionBuilder.cs" />
     <Compile Include="Logging\TraceLogger.cs" />
+    <Compile Include="TypeLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

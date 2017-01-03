@@ -7,26 +7,38 @@ using System.Text;
 using Nancy;
 using Nancy.Conventions;
 using StaticNancy.Content;
+using StaticNancy.Logging;
 
 namespace StaticNancy
 {
     public class NancyBootstrapper : DefaultNancyBootstrapper
     {
-        readonly IStaticContentsConventionsProvider _conventions;
+        readonly ITraceLogger _log;
 
         public NancyBootstrapper()
         {
-            _conventions = new FixedStaticContentsConventionsProvider();
+            _log = new TraceLogger("Bootstrapper");
         }
 
         protected override void ConfigureConventions(NancyConventions nancyConventions)
         {
             base.ConfigureConventions(nancyConventions);
 
-            foreach (var convention in _conventions.GetConventions())
+            var conventions = GetStaticContentsConventionsProvider()
+                .GetConventions()
+                .ToArray();
+
+            _log.WriteLineDebug("Adding {0} conventions", conventions.Length);
+
+            foreach (var convention in conventions)
             {
                 nancyConventions.StaticContentsConventions.Add(convention);
             }
+        }
+
+        IStaticContentsConventionsProvider GetStaticContentsConventionsProvider()
+        {
+            return new FixedStaticContentsConventionsProvider();
         }
     }
 }
