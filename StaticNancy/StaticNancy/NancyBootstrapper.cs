@@ -12,11 +12,21 @@ namespace StaticNancy
 {
     public class NancyBootstrapper : DefaultNancyBootstrapper
     {
+        readonly IStaticContentsConventionsProvider _conventions;
+
+        public NancyBootstrapper()
+        {
+            _conventions = new FixedStaticContentsConventionsProvider();
+        }
+
         protected override void ConfigureConventions(NancyConventions nancyConventions)
         {
             base.ConfigureConventions(nancyConventions);
 
-            nancyConventions.StaticContentsConventions.Add(StaticContentsConventionBuilder.AddDirectory("/Files", Assembly.GetAssembly(typeof(DummyClass)), "StaticNancy.Content.Files"));
+            foreach (var convention in _conventions.GetConventions())
+            {
+                nancyConventions.StaticContentsConventions.Add(convention);
+            }
         }
     }
 }
