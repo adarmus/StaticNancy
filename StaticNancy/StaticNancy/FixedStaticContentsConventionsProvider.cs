@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Nancy;
+using StaticNancy.Logging;
 
 namespace StaticNancy
 {
@@ -12,9 +13,11 @@ namespace StaticNancy
     {
         public IEnumerable<Func<NancyContext, string, Response>> GetConventions()
         {
+            var log = new TraceLogger("Fixed");
+            var builder = new StaticContentsConventionBuilder(log);
             return new []
             {
-                StaticContentsConventionBuilder.AddDirectory("/Files", Assembly.GetAssembly(typeof (FixedStaticContentsConventionsProvider)), "StaticNancy.Content.Files")
+                builder.AddDirectory("/Files", Assembly.GetAssembly(typeof (FixedStaticContentsConventionsProvider)), "StaticNancy.Content.Files")
             };
         }
     }

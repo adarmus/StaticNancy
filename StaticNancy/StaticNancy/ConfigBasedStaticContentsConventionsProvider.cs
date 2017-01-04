@@ -29,6 +29,8 @@ namespace StaticNancy
 
             _log.WriteLineDebug("Loading {0} resource providers", _config.ResourceProviders.Count);
 
+            var builder = new StaticContentsConventionBuilder(_log);
+
             foreach (var resource in _config.ResourceProviders)
             {
                 var ass = _types.GetAssembly(resource.AssemblyName);
@@ -40,7 +42,7 @@ namespace StaticNancy
                 else
                 {
                     _log.WriteLineDebug("Provider {0}: path: {1}; prefix: {2}; assembly: {3}", resource.Name, resource.RequestedPath, resource.ResourcePrefix, resource.AssemblyName);
-                    list.Add(StaticContentsConventionBuilder.AddDirectory(resource.RequestedPath, ass, resource.ResourcePrefix));
+                    list.Add(builder.AddDirectory(resource.RequestedPath, ass, resource.ResourcePrefix));
                 }
             }
 

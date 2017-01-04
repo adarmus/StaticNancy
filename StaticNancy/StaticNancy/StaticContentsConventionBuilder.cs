@@ -7,11 +7,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Nancy;
 using Nancy.Responses;
+using StaticNancy.Logging;
 
 namespace StaticNancy
 {
-    public class StaticContentsConventionBuilder
+    class StaticContentsConventionBuilder
     {
+        readonly ITraceLogger _log;
+
+        public StaticContentsConventionBuilder(ITraceLogger log)
+        {
+            _log = log;
+        }
+
         /// <summary>
         /// Creates a delegate that maps a request for a given requestedPath to embedded resources in the given assembly.
         /// </summary>
@@ -19,13 +27,13 @@ namespace StaticNancy
         /// <param name="assembly"></param>
         /// <param name="namespacePrefix"></param>
         /// <returns></returns>
-        public static Func<NancyContext, string, Response> AddDirectory(string requestedPath, Assembly assembly, string namespacePrefix)
+        public Func<NancyContext, string, Response> AddDirectory(string requestedPath, Assembly assembly, string namespacePrefix)
         {
             return (context, _) =>
             {
                 var path = context.Request.Path;
 
-                Console.WriteLine(path);
+                //Console.WriteLine(path);
 
                 if (!path.StartsWith(requestedPath))
                 {
@@ -46,6 +54,8 @@ namespace StaticNancy
                     name = adjustedPath;
                     resourcePath = namespacePrefix;
                 }
+
+                _log.WriteLineDebug("Request {0}; path={1}; name={2}", path, resourcePath, name);
 
                 return new EmbeddedFileResponse(assembly, resourcePath, name);
             };
