@@ -78,6 +78,9 @@
     <Compile Include="Shell\ServiceShell.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Shell\NancyServiceInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="StaticContentsConventionBuilder.cs" />
     <Compile Include="Logging\TraceLogger.cs" />
     <Compile Include="TypeLoader.cs" />
