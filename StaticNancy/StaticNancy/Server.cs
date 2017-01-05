@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nancy.Hosting.Self;
+using StaticNancy.Config;
 using StaticNancy.Logging;
 
 namespace StaticNancy
@@ -22,9 +23,13 @@ namespace StaticNancy
         {
             _log.WriteLineInfo("Starting server...");
 
-            _host = new NancyHost(new Uri("http://localhost:12345"));
+            var config = ConfigReader.GetConfigurationSection<NancyServiceConfigurationSection>(NancyServiceConfigurationSection.CONFIG_SECTION);
+
+            string url = string.Format("http://localhost:{0}/", config.Port);
+
+            _host = new NancyHost(new Uri(url));
             _host.Start();
-            _log.WriteLineInfo("Running on http://localhost:12345");
+            _log.WriteLineInfo("Running on {0}", url);
 
             _log.WriteLineInfo("Starting server...done");
         }
