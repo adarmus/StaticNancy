@@ -4,7 +4,7 @@ using log4net.Config;
 
 namespace StaticNancy.Logging
 {
-    class Log4NetInitialiser
+    public class Log4NetInitialiser
     {
         public void SetConfigurationFromAppConfig(string filename)
         {
