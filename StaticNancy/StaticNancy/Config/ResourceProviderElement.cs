@@ -30,11 +30,11 @@ namespace StaticNancy.Config
             set { this["resourcePrefix"] = value; }
         }
 
-        [ConfigurationProperty("requestedPath", IsRequired = true)]
-        public string RequestedPath
+        [ConfigurationProperty("requestRootPath", IsRequired = true)]
+        public string RequestRootPath
         {
-            get { return (string)this["requestedPath"]; }
-            set { this["requestedPath"] = value; }
+            get { return (string)this["requestRootPath"]; }
+            set { this["requestRootPath"] = value; }
         }
 
         [ConfigurationProperty("enabled", IsRequired = false, DefaultValue = true)]
@@ -42,6 +42,13 @@ namespace StaticNancy.Config
         {
             get { return (bool)this["enabled"]; }
             set { this["enabled"] = value; }
+        }
+
+        [ConfigurationProperty("defaultResource", IsRequired = false)]
+        public string DefaultResource
+        {
+            get { return (string)this["defaultResource"]; }
+            set { this["defaultResource"] = value; }
         }
     }
 }

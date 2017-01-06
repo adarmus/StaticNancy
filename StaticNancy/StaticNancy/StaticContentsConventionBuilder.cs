@@ -29,29 +29,46 @@ namespace StaticNancy
         /// <returns></returns>
         public Func<NancyContext, string, Response> AddDirectory(string requestedPath, Assembly assembly, string namespacePrefix)
         {
+            return AddDirectory(requestedPath, assembly, namespacePrefix, null);
+        }
+
+        /// <summary>
+        /// Creates a delegate that maps a request for a given requestedPath to embedded resources in the given assembly.
+        /// </summary>
+        /// <param name="requestRootPath"></param>
+        /// <param name="assembly"></param>
+        /// <param name="namespacePrefix"></param>
+        /// <param name="defaultResource"></param>
+        /// <returns></returns>
+        public Func<NancyContext, string, Response> AddDirectory(string requestRootPath, Assembly assembly, string namespacePrefix, string defaultResource)
+        {
             return (context, _) =>
             {
                 var path = context.Request.Path;
 
-                //Console.WriteLine(path);
-
-                if (!path.StartsWith(requestedPath))
+                if (!path.StartsWith(requestRootPath))
                 {
                     return null;
+                }
+
+                var relativePath = path.Length == requestRootPath.Length ? string.Empty : path.Substring(requestRootPath.Length + 1);
+
+                if (string.IsNullOrEmpty(relativePath) && !string.IsNullOrEmpty(defaultResource))
+                {
+                    relativePath = defaultResource;
                 }
 
                 string resourcePath;
                 string name;
 
-                var adjustedPath = path.Substring(requestedPath.Length + 1);
-                if (adjustedPath.IndexOf('/') >= 0)
+                if (relativePath.IndexOf('/') >= 0)
                 {
-                    name = Path.GetFileName(adjustedPath);
-                    resourcePath = namespacePrefix + "." + adjustedPath.Substring(0, adjustedPath.Length - name.Length - 1).Replace('/', '.');
+                    name = Path.GetFileName(relativePath);
+                    resourcePath = namespacePrefix + "." + relativePath.Substring(0, relativePath.Length - name.Length - 1).Replace('/', '.');
                 }
                 else
                 {
-                    name = adjustedPath;
+                    name = relativePath;
                     resourcePath = namespacePrefix;
                 }
 

@@ -41,8 +41,9 @@ namespace StaticNancy
                 }
                 else
                 {
-                    _log.WriteLineDebug("Provider {0}: path: {1}; prefix: {2}; assembly: {3}", resource.Name, resource.RequestedPath, resource.ResourcePrefix, resource.AssemblyName);
-                    list.Add(builder.AddDirectory(resource.RequestedPath, ass, resource.ResourcePrefix));
+                    _log.WriteLineDebug("Provider {0}: path: {1}; prefix: {2}; assembly: {3}", resource.Name, resource.RequestRootPath, resource.ResourcePrefix, resource.AssemblyName);
+
+                    list.Add(builder.AddDirectory(resource.RequestRootPath, ass, resource.ResourcePrefix, resource.DefaultResource));
                 }
             }
 
