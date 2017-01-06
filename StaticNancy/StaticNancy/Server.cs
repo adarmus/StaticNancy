@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,9 @@ namespace StaticNancy
             _log.WriteLineInfo("Starting server...");
 
             var config = ConfigReader.GetConfigurationSection<NancyServiceConfigurationSection>(NancyServiceConfigurationSection.CONFIG_SECTION);
+
+            if (config.Port == 0)
+                throw new ConfigurationErrorsException("Port is not specified");
 
             string url = string.Format("http://localhost:{0}/", config.Port);
 

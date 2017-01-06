@@ -11,7 +11,7 @@ namespace StaticNancy.Config
     {
         internal const string CONFIG_SECTION = "nancyService";
 
-        [ConfigurationProperty("port", IsRequired = true)]
+        [ConfigurationProperty("port", IsRequired = false)]
         public int Port
         {
             get { return (int)this["port"]; }
