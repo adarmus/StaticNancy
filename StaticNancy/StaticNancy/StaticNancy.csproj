@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Log4net.config" />
     <None Include="NancyService.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
