@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Nancy;
 using StaticNancy.Config;
 using StaticNancy.Logging;
+using System.Linq;
 
 namespace StaticNancy.Conventions
 {
@@ -27,7 +28,7 @@ namespace StaticNancy.Conventions
 
             var builder = new StaticContentsConventionBuilder(_log);
 
-            foreach (var resource in _config.ResourceProviders)
+            foreach (var resource in _config.ResourceProviders.Where(p => p.Enabled))
             {
                 var ass = _types.GetAssembly(resource.AssemblyName);
 
