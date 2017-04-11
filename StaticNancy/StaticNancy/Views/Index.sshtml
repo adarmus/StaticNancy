@@ -7,5 +7,32 @@
 </head>
 <body>
 
+<style type="text/css">
+
+    body{
+        font-family: "Source Sans Pro",Calibri,Candara,Arial,sans-serif;
+    }
+    
+    .option{
+        position: relative;
+        color: black;
+        background: #fff;
+        margin-bottom: 5px;
+        padding: 10px;
+        border: solid 1px #aaa;
+        min-height: 50px;
+        cursor: pointer;
+    }
+    
+</style>
+
+<div class="container">
+@Each.Roots
+   
+    <a href="@Current.Url/" class="option">@Current.Title</a>
+
+@EndEach
+</div>
+
 </body>
 </html>
