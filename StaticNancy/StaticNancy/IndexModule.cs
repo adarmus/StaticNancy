@@ -38,14 +38,16 @@ namespace StaticNancy
         {
             var roots = new List<RootInfo>();
 
-            foreach (var resource in _config.ResourceProviders)
+            var active = _config.ResourceProviders.Where(p => p.Enabled);
+
+            foreach (var resource in active)
             {
                 _log.WriteLineDebug("Provider {0}: path: {1}; prefix: {2}; assembly: {3}", resource.Name, resource.RequestRootPath, resource.ResourcePrefix, resource.AssemblyName);
 
                 roots.Add(new RootInfo
                 {
                     Title = resource.Name,
-                    Url = resource.RequestRootPath
+                    Url = AdjustRootPath(resource.RequestRootPath)
                 });
             }
 
@@ -54,6 +56,18 @@ namespace StaticNancy
                 Roots = roots
             };
             return model;
+        }
+
+        string AdjustRootPath(string path)
+        {
+            string newpath = path;
+            if (path.StartsWith("/"))
+                newpath = path.Substring(1);
+
+            if (!newpath.EndsWith("/"))
+                newpath = string.Format("{0}/", newpath);
+
+            return newpath;
         }
     }
 }

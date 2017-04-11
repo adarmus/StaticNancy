@@ -29,7 +29,7 @@
 <div class="container">
 @Each.Roots
    
-    <a href="@Current.Url/" class="option">@Current.Title</a>
+    <a href="@Current.Url" class="option">@Current.Title</a>
 
 @EndEach
 </div>
