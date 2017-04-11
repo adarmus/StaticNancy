@@ -21,6 +21,11 @@ namespace StaticNancy
             _log = new TraceLogger("Bootstrapper");
         }
 
+        protected override IRootPathProvider RootPathProvider
+        {
+            get { return new RootPathProvider(); }
+        }
+
         protected override void ConfigureConventions(NancyConventions nancyConventions)
         {
             base.ConfigureConventions(nancyConventions);
