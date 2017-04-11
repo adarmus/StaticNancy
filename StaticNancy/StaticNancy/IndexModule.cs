@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace StaticNancy
 {
-    internal class IndexModule : NancyModule
+    public class IndexModule : NancyModule
     {
         readonly ITraceLogger _log;
         readonly NancyServiceConfigurationSection _config;
@@ -28,7 +28,7 @@ namespace StaticNancy
         {
             _log.WriteLineDebug("Index: {0}", parameters);
 
-            return Task.FromResult<object>(View["Views/Index.sshtml"]);
+            return Task.FromResult<object>(View["Index.sshtml"]);
         }
 
         void AddIndexEndpoint(NancyServiceConfigurationSection config)
