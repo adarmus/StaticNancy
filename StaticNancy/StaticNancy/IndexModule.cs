@@ -1,6 +1,7 @@
 ﻿using Nancy;
 using StaticNancy.Config;
 using StaticNancy.Logging;
+using StaticNancy.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,16 +29,31 @@ namespace StaticNancy
         {
             _log.WriteLineDebug("Index: {0}", parameters);
 
-            return Task.FromResult<object>(View["Index.sshtml"]);
+            IndexInfo model = GetIndexModel();
+
+            return Task.FromResult<object>(View["Index.sshtml", model]);
         }
 
-        void AddIndexEndpoint(NancyServiceConfigurationSection config)
+        IndexInfo GetIndexModel()
         {
-            foreach (var resource in config.ResourceProviders)
+            var roots = new List<RootInfo>();
+
+            foreach (var resource in _config.ResourceProviders)
             {
                 _log.WriteLineDebug("Provider {0}: path: {1}; prefix: {2}; assembly: {3}", resource.Name, resource.RequestRootPath, resource.ResourcePrefix, resource.AssemblyName);
 
+                roots.Add(new RootInfo
+                {
+                    Title = resource.Name,
+                    Url = resource.RequestRootPath
+                });
             }
+
+            var model = new IndexInfo
+            {
+                Roots = roots
+            };
+            return model;
         }
     }
 }

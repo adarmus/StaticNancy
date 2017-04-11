@@ -66,6 +66,8 @@
     <Compile Include="Conventions\FixedStaticContentsConventionsProvider.cs" />
     <Compile Include="Conventions\IStaticContentsConventionsProvider.cs" />
     <Compile Include="IndexModule.cs" />
+    <Compile Include="Models\IndexInfo.cs" />
+    <Compile Include="Models\RootInfo.cs" />
     <Compile Include="Shell\ConsoleShell.cs" />
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="Shell\InstallerShell.cs" />
