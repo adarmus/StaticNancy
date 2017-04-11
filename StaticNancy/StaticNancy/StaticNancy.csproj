@@ -65,6 +65,7 @@
     <Compile Include="Config\ResourceProviderElement.cs" />
     <Compile Include="Conventions\FixedStaticContentsConventionsProvider.cs" />
     <Compile Include="Conventions\IStaticContentsConventionsProvider.cs" />
+    <Compile Include="IndexModule.cs" />
     <Compile Include="Shell\ConsoleShell.cs" />
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="Shell\InstallerShell.cs" />
@@ -92,6 +93,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Views\Index.sshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
