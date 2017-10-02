@@ -4,6 +4,7 @@ using Nancy;
 using StaticNancy.Config;
 using StaticNancy.Logging;
 using System.Linq;
+using System.Reflection;
 
 namespace StaticNancy.Conventions
 {
@@ -41,10 +42,27 @@ namespace StaticNancy.Conventions
                     _log.WriteLineDebug("Provider {0}: path: {1}; prefix: {2}; assembly: {3}", resource.Name, resource.RequestRootPath, resource.ResourcePrefix, resource.AssemblyName);
 
                     list.Add(builder.AddDirectory(resource.RequestRootPath, ass, resource.ResourcePrefix, resource.DefaultResource));
+
+                    if (resource.OutputResourcesList)
+                    {
+                        OutputResourceList(ass);
+                    }
                 }
             }
 
             return list;
+        }
+
+        void OutputResourceList(Assembly ass)
+        {
+            string[] names = ass.GetManifestResourceNames();
+
+            _log.WriteLineDebug("Assembly: {0}", ass.FullName);
+
+            foreach (string name in names)
+            {
+                _log.WriteLineDebug("Resource: {0}", name);
+            }
         }
     }
 }

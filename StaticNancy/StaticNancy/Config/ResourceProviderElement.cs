@@ -44,6 +44,13 @@ namespace StaticNancy.Config
             set { this["enabled"] = value; }
         }
 
+        [ConfigurationProperty("outputResourcesList", IsRequired = false, DefaultValue = false)]
+        public bool OutputResourcesList
+        {
+            get { return (bool)this["outputResourcesList"]; }
+            set { this["outputResourcesList"] = value; }
+        }
+
         [ConfigurationProperty("defaultResource", IsRequired = false)]
         public string DefaultResource
         {
