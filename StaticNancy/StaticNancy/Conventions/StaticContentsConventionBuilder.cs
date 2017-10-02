@@ -42,11 +42,11 @@ namespace StaticNancy.Conventions
             {
                 var path = context.Request.Path;
 
-                _log.WriteLineDebug("Request {0}; root={1}; prefix={2}; assembly={3}", path, requestRootPath, namespacePrefix, assembly.GetName());
+                _log.WriteLineDebug("Request  {0}; root={1}; prefix={2}; assembly={3}", path, requestRootPath, namespacePrefix, assembly.GetName());
 
                 if (!path.StartsWith(requestRootPath))
                 {
-                    _log.WriteLineDebug("Response null {0}", path);
+                    _log.WriteLineDebug("Response {0} null", path);
                     return null;
                 }
 
@@ -71,7 +71,7 @@ namespace StaticNancy.Conventions
                     resourcePath = namespacePrefix;
                 }
 
-                _log.WriteLineDebug("Response {0}; path={1}; name={2}", path, resourcePath, name);
+                _log.WriteLineDebug("Response {0}; resourcePath={1}; name={2}", path, resourcePath, name);
 
                 return new EmbeddedFileResponse(assembly, resourcePath, name);
             };
