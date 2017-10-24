@@ -66,6 +66,7 @@
     <Compile Include="Conventions\FixedStaticContentsConventionsProvider.cs" />
     <Compile Include="Conventions\IStaticContentsConventionsProvider.cs" />
     <Compile Include="IndexModule.cs" />
+    <Compile Include="Models\DriveInfo.cs" />
     <Compile Include="Models\IndexInfo.cs" />
     <Compile Include="Models\RootInfo.cs" />
     <Compile Include="RootPathProvider.cs" />
@@ -97,6 +98,9 @@
     </None>
     <None Include="packages.config" />
     <Content Include="Views\Index.sshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Drive.sshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

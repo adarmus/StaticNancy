@@ -23,6 +23,7 @@ namespace StaticNancy
             _config = ConfigReader.GetConfigurationSection<NancyServiceConfigurationSection>(NancyServiceConfigurationSection.CONFIG_SECTION);
 
             this.Get["/Index", runAsync: true] = this.OnIndex;
+            this.Get["/Drive/{drive}", runAsync: true] = this.OnDrive;
         }
 
         private Task<object> OnIndex(object parameters, CancellationToken token)
@@ -32,6 +33,30 @@ namespace StaticNancy
             IndexInfo model = GetIndexModel();
 
             return Task.FromResult<object>(View["Index.sshtml", model]);
+        }
+
+        private Task<object> OnDrive(dynamic parameters, CancellationToken token)
+        {
+            _log.WriteLineDebug("Drive: {0}", parameters.drive);
+
+            DriveInfo model = GetDrive(parameters.drive);
+
+            return Task.FromResult<object>(View["Drive.sshtml", model]);
+        }
+
+        DriveInfo GetDrive(string driveLetter)
+        {
+            var drives = System.IO.Directory.GetLogicalDrives();
+
+            var root = System.IO.Directory.GetDirectoryRoot($"{driveLetter}:");
+
+            bool exists = drives.Contains(root);
+
+            return new DriveInfo
+            {
+                Drive = driveLetter,
+                Exists = exists
+            };
         }
 
         IndexInfo GetIndexModel()
