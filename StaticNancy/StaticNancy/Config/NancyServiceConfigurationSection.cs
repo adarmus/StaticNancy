@@ -18,6 +18,13 @@ namespace StaticNancy.Config
             set { this["port"] = value; }
         }
 
+        [ConfigurationProperty("drive", IsRequired = false)]
+        public string Drive
+        {
+            get { return (string)this["drive"]; }
+            set { this["drive"] = value; }
+        }
+
         [ConfigurationCollection(typeof(ResourceProviderCollection))]
         [ConfigurationProperty("resourceProviders")]
         public ResourceProviderCollection ResourceProviders
