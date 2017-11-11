@@ -16,7 +16,7 @@ namespace StaticNancy.Web
     {
         public void Configuration(IAppBuilder app)
         {
-            new Log4NetInitialiser().SetConfigurationFromAppConfig("Log4net.config");
+            new Log4NetInitialiser("Log4net.config").SetConfigurationFromFile();
 
             NancyBootstrapperLocator.Bootstrapper = new NancyBootstrapper();
             app.UseNancy();

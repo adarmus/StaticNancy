@@ -6,9 +6,16 @@ namespace StaticNancy.Logging
 {
     public class Log4NetInitialiser
     {
-        public void SetConfigurationFromAppConfig(string filename)
+        readonly string _filename;
+
+        public Log4NetInitialiser(string filename)
         {
-            string filepath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
+            _filename = filename;
+        }
+
+        public void SetConfigurationFromFile()
+        {
+            string filepath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _filename);
             var file = new FileInfo(filepath);
 
             if (file.Exists)
