@@ -11,7 +11,7 @@ namespace StaticNancy.Shell
 
         public void Start()
         {
-            new Log4NetInitialiser().SetConfigurationFromAppConfig("Log4net.config");
+            new Log4NetInitialiser("Log4net.config").SetConfigurationFromFile();
 
             _server = null;
             _log = new TraceLogger("Console");
