@@ -24,6 +24,8 @@ namespace StaticNancy
 
             this.Get["/Index", runAsync: true] = this.OnIndex;
             this.Get["/Drive/{drive}", runAsync: true] = this.OnDrive;
+            this.Get["/Drive/{drive}/status", runAsync: true] = this.OnDriveStatusGet;
+            this.Post["/Drive/{drive}/status", runAsync: true] = this.OnDriveStatusPost;
         }
 
         private Task<object> OnIndex(object parameters, CancellationToken token)
@@ -33,6 +35,31 @@ namespace StaticNancy
             IndexInfo model = GetIndexModel();
 
             return Task.FromResult<object>(View["Index.sshtml", model]);
+        }
+
+        private Task<object> OnDriveStatusGet(dynamic parameters, CancellationToken token)
+        {
+            _log.WriteLineDebug("DriveStatusGet: {0}", parameters.drive);
+
+            DriveInfo model = GetDrive(parameters.drive);
+
+            return Task.FromResult<object>(new { mounted = model.Exists });
+        }
+
+        private Task<object> OnDriveStatusPost(dynamic parameters, CancellationToken token)
+        {
+            _log.WriteLineDebug("DriveStatusPost: {0}", parameters.drive);
+
+            DriveInfo model = GetDrive(parameters.drive);
+
+            if (model.Exists)
+            {
+                return Task.FromResult<object>(new { mounted = true });
+            }
+            else
+            {
+                return Task.FromResult<object>(new { mounted = false });
+            }
         }
 
         private Task<object> OnDrive(dynamic parameters, CancellationToken token)

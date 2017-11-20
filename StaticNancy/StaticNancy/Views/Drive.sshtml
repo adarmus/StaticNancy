@@ -27,8 +27,51 @@
 </style>
 
 <div class="container">
-	Drive @Model.Drive exists: @Model.Exists
+	Drive @Model.Drive <button onclick="onClick()" id="btn">?</button>
 </div>
+
+<script>
+var drive = "@Model.Drive";
+var url = "/drive/" + drive + "/status";
+
+var request = new XMLHttpRequest();
+request.onload = function () {
+	showStatus(request.responseText);
+}
+
+request.open("GET", url, true);
+request.send();	
+
+function showStatus(statusText){
+	var d = JSON.parse(statusText);
+	if (d.mounted){
+		document.getElementById("btn").textContent="Unmount";
+	}
+	else{
+		document.getElementById("btn").textContent="Mount";
+	}
+}
+
+function onClick(){
+	var method = "POST";
+	var shouldBeAsync = true;
+
+	var request = new XMLHttpRequest();
+	request.onload = function () {
+		var status = request.status; // HTTP response status, e.g., 200 for "200 OK"
+		showStatus(request.responseText);
+		//var data = request.responseText; // Returned data, e.g., an HTML document.
+		//alert('hi ' + data);
+		//alert(status);
+		//document.getElementById("results").textContent=data;
+	}
+
+	request.open(method, url, shouldBeAsync);
+
+	request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+	request.send();	//postData);
+}
+</script>
 
 </body>
 </html>
