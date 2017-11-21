@@ -38,11 +38,20 @@ namespace StaticNancy.Shell
                     case ConsoleKey.D3:
                         UnInstall();
                         break;
+                    case ConsoleKey.D4:
+                        Encrypt();
+                        break;
                     default:
                         showMenu = false;
                         break;
                 }
             } while (key.Key != ConsoleKey.Escape);
+        }
+
+        void Encrypt()
+        {
+            var console = new CryptoShell();
+            console.Encrypt();
         }
 
         void Install()
