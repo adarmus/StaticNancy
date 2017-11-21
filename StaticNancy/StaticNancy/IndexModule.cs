@@ -1,9 +1,11 @@
 ﻿using Nancy;
 using StaticNancy.Config;
+using StaticNancy.Crypto;
 using StaticNancy.Logging;
 using StaticNancy.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -23,7 +25,7 @@ namespace StaticNancy
             _config = ConfigReader.GetConfigurationSection<NancyServiceConfigurationSection>(NancyServiceConfigurationSection.CONFIG_SECTION);
 
             this.Get["/Index", runAsync: true] = this.OnIndex;
-            this.Get["/Drive/{drive}", runAsync: true] = this.OnDrive;
+            this.Get["/Drive/{drive}", runAsync: true] = this.OnDrivePage;
             this.Get["/Drive/{drive}/status", runAsync: true] = this.OnDriveStatusGet;
             this.Post["/Drive/{drive}/status", runAsync: true] = this.OnDriveStatusPost;
         }
@@ -37,36 +39,7 @@ namespace StaticNancy
             return Task.FromResult<object>(View["Index.sshtml", model]);
         }
 
-        private Task<object> OnDriveStatusGet(dynamic parameters, CancellationToken token)
-        {
-            _log.WriteLineDebug("DriveStatusGet: {0}", parameters.drive);
-
-            DriveInfo model = GetDrive(parameters.drive);
-
-            return Task.FromResult<object>(new { mounted = model.Exists });
-        }
-
-        private Task<object> OnDriveStatusPost(dynamic parameters, CancellationToken token)
-        {
-            _log.WriteLineDebug("DriveStatusPost: {0}", parameters.drive);
-
-            DriveInfo model = GetDrive(parameters.drive);
-
-            Response response;
-
-            if (model.Exists)
-            {
-                response = Response.AsJson<object>(new { mounted = true });
-            }
-            else
-            {
-                response = Response.AsJson<object>(new { mounted = false }, HttpStatusCode.BadRequest);
-            }
-
-            return Task.FromResult<object>(response);
-        }
-
-        private Task<object> OnDrive(dynamic parameters, CancellationToken token)
+        private Task<object> OnDrivePage(dynamic parameters, CancellationToken token)
         {
             _log.WriteLineDebug("Drive: {0}", parameters.drive);
 
@@ -75,19 +48,124 @@ namespace StaticNancy
             return Task.FromResult<object>(View["Drive.sshtml", model]);
         }
 
+        private Task<object> OnDriveStatusGet(dynamic parameters, CancellationToken token)
+        {
+            return GetDriveStatus(parameters.drive);
+        }
+
+        private Task<object> GetDriveStatus(string drive)
+        {
+            _log.WriteLineDebug("DriveStatusGet: {0}", drive);
+
+            DriveInfo model = GetDrive(drive);
+
+            _log.WriteLineDebug("DriveStatusGet: {0} exists={1} canmount={2}", model.Drive, model.Exists, model.CanMount);
+
+            Response response;
+
+            if (model.Exists)
+            {
+                response = Response.AsJson<object>(new { mounted = true, canMount = false });
+            }
+            else if (model.CanMount)
+            {
+                response = Response.AsJson<object>(new { mounted = false, canMount = true });
+            }
+            else
+            {
+                response = Response.AsJson<object>(new { mounted = false, canMount = false }, HttpStatusCode.BadRequest);
+            }
+
+            return Task.FromResult<object>(response);
+        }
+
+        private Task<object> OnDriveStatusPost(dynamic parameters, CancellationToken token)
+        {
+            _log.WriteLineDebug("DriveStatusPost: {0}", parameters.drive);
+
+            DriveInfo model = GetDrive(parameters.drive);
+
+            _log.WriteLineDebug("DriveStatusPost: {0} exists={1} canmount={2}", model.Drive, model.Exists, model.CanMount);
+
+            Response response;
+
+            if (model.Exists)
+            {
+                DoUnmount(model.Drive);
+                response = HttpStatusCode.OK;
+                //response = await GetDriveStatus(model.Drive);
+            }
+            else if (model.CanMount)
+            {
+                DoMount(model.Drive);
+                response = HttpStatusCode.OK;
+                //response = await GetDriveStatus(model.Drive);
+            }
+            else
+            {
+                response = Response.AsJson<object>(new { mounted = false, canMount = false }, HttpStatusCode.BadRequest);
+            }
+
+            return Task.FromResult<object>(response);
+        }
+
+        void DoMount(string letter)
+        {
+            if (string.IsNullOrEmpty(_config.DriveMountCommand))
+                return;
+
+            RunCommand(_config.DriveMountCommand);
+        }
+
+        void DoUnmount(string letter)
+        {
+            if (string.IsNullOrEmpty(_config.DriveUnmountCommand))
+                return;
+
+            RunCommand(_config.DriveUnmountCommand);
+        }
+
+        void RunCommand(string encCommand)
+        {
+            var cipher = new Cipher();
+            string command = cipher.DecryptUsingPassword(encCommand, _config.DrivePwd);
+            _log.WriteLineDebug("CMD {0}", command);
+
+            var p = Process.Start(command);
+        }
+
         DriveInfo GetDrive(string driveLetter)
         {
-            var drives = System.IO.Directory.GetLogicalDrives();
+            string letter = driveLetter.Substring(0, 1);
 
-            var root = System.IO.Directory.GetDirectoryRoot($"{driveLetter}:");
+            if (!string.Equals(letter, _config.Drive, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return new DriveInfo
+                {
+                    Drive = letter,
+                    Exists = false,
+                    CanMount = false
+                };
+            }
 
-            bool exists = drives.Contains(root);
+            bool exists = DoesDriveExist(letter);
 
             return new DriveInfo
             {
-                Drive = driveLetter,
-                Exists = exists
+                Drive = letter,
+                Exists = exists,
+                CanMount = true
             };
+        }
+
+        bool DoesDriveExist(string letter)
+        {
+            var drives = System.IO.Directory.GetLogicalDrives();
+
+            var root = System.IO.Directory.GetDirectoryRoot($"{letter}:");
+
+            bool exists = drives.Contains(root);
+            return exists;
         }
 
         IndexInfo GetIndexModel()

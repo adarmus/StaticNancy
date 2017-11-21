@@ -11,5 +11,7 @@ namespace StaticNancy.Models
         public string Drive { get; set; }
 
         public bool Exists { get; set; }
+
+        public bool CanMount { get; set; }
     }
 }
