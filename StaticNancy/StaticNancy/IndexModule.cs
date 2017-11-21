@@ -52,14 +52,18 @@ namespace StaticNancy
 
             DriveInfo model = GetDrive(parameters.drive);
 
+            Response response;
+
             if (model.Exists)
             {
-                return Task.FromResult<object>(new { mounted = true });
+                response = Response.AsJson<object>(new { mounted = true });
             }
             else
             {
-                return Task.FromResult<object>(new { mounted = false });
+                response = Response.AsJson<object>(new { mounted = false }, HttpStatusCode.BadRequest);
             }
+
+            return Task.FromResult<object>(response);
         }
 
         private Task<object> OnDrive(dynamic parameters, CancellationToken token)

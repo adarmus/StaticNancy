@@ -27,7 +27,7 @@
 </style>
 
 <div class="container">
-	Drive @Model.Drive <button onclick="onClick()" id="btn">?</button>
+	Drive @Model.Drive <button onclick="onClick()" id="btn">?</button> <span id="progress" />
 </div>
 
 <script>
@@ -64,7 +64,16 @@ function onClick(){
 		//alert('hi ' + data);
 		//alert(status);
 		//document.getElementById("results").textContent=data;
+
+		if (status == 200){
+			document.getElementById("progress").textContent="Done";
+		}
+		else {
+			document.getElementById("progress").textContent="Error " + status;
+		}
 	}
+
+	document.getElementById("progress").textContent="Mounting...";
 
 	request.open(method, url, shouldBeAsync);
 
