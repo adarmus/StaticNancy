@@ -41,11 +41,21 @@ namespace StaticNancy
 
         private Task<object> OnDrivePage(dynamic parameters, CancellationToken token)
         {
-            _log.WriteLineDebug("Drive: {0}", parameters.drive);
+            try
+            {
+                _log.WriteLineDebug("Drive: {0}", parameters.drive);
 
-            DriveInfo model = GetDrive(parameters.drive);
+                DriveInfo model = GetDrive(parameters.drive);
 
-            return Task.FromResult<object>(View["Drive.sshtml", model]);
+                _log.WriteLineDebug("Drive: {0} exists={1} canmount={2}", model.Drive, model.Exists, model.CanMount);
+
+                return Task.FromResult<object>(View["Drive.sshtml", model]);
+            }
+            catch (Exception ex)
+            {
+                _log.WriteLineError(ex, "Drive: {0}", parameters.drive);
+                throw;
+            }
         }
 
         private Task<object> OnDriveStatusGet(dynamic parameters, CancellationToken token)
