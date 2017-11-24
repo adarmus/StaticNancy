@@ -32,7 +32,8 @@
 
 <script>
 var drive = "@Model.Drive";
-var url = "/drive/" + drive + "/status";
+var rootUrl = getRootUrl(window.location.href);
+var url = rootUrl + drive + "/status";
 
 var request = new XMLHttpRequest();
 request.onload = function () {
@@ -41,6 +42,16 @@ request.onload = function () {
 
 request.open("GET", url, true);
 request.send();	
+
+function getRootUrl(locationHref) {
+    var i = locationHref.indexOf('/drive');
+    if (i < 0) {
+        return locationHref;
+    } else {
+        var root = locationHref.substring(0, i + 6);
+        return root.concat('/');
+    }
+}
 
 function showStatus(statusText){
 	var d = JSON.parse(statusText);
