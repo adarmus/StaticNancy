@@ -19,6 +19,17 @@ namespace StaticNancy
         public DriveLogic(NancyServiceConfigurationSection config)
         {
             _config = config;
+
+            //Test("\"aaa bbb\" cc dd");
+            //Test("aaa bbb cc dd");
+            //Test("aaa");
+        }
+
+        void Test(string input)
+        {
+            string file;
+            string args;
+            GetCommandArgs(input, out file, out args);
         }
 
         public void DoMount(string letter)
@@ -45,12 +56,48 @@ namespace StaticNancy
                 string command = cipher.DecryptUsingPassword(encCommand, _config.DrivePwd);
                 _log.WriteLineDebug("CMD {0}", command);
 
-                var p = Process.Start(command);
+                string file;
+                string args;
+                GetCommandArgs(command, out file, out args);
+
+                var p = Process.Start(file, args);
             }
             catch (Exception ex)
             {
                 _log.WriteLineError(ex, "Cmd: {0}", encCommand);
                 throw;
+            }
+        }
+
+        void GetCommandArgs(string fullCommand, out string file, out string args)
+        {
+            file = string.Empty;
+            args = string.Empty;
+
+            if (string.IsNullOrEmpty(fullCommand))
+                return;
+
+            if (fullCommand.StartsWith("\""))
+            {
+                // "<filepath>" <args>
+                // Split on the 2nd "
+                int i = fullCommand.IndexOf("\"", 1);
+                file = fullCommand.Substring(0, i + 1);
+                args = fullCommand.Substring(i + 2);
+            }
+            else if (fullCommand.Contains(" "))
+            {
+                // <filepath> args
+                // Split on the 1st space
+                int i = fullCommand.IndexOf(" ");
+                file = fullCommand.Substring(0, i);
+                args = fullCommand.Substring(i + 1);
+            }
+            else
+            {
+                // <filepath>
+                // No args - just a filepath
+                file = fullCommand;
             }
         }
 
