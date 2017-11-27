@@ -137,11 +137,19 @@ namespace StaticNancy
 
         void RunCommand(string encCommand)
         {
-            var cipher = new Cipher();
-            string command = cipher.DecryptUsingPassword(encCommand, _config.DrivePwd);
-            _log.WriteLineDebug("CMD {0}", command);
+            try
+            {
+                var cipher = new Cipher();
+                string command = cipher.DecryptUsingPassword(encCommand, _config.DrivePwd);
+                _log.WriteLineDebug("CMD {0}", command);
 
-            var p = Process.Start(command);
+                var p = Process.Start(command);
+            }
+            catch (Exception ex)
+            {
+                _log.WriteLineError(ex, "Cmd: {0}", encCommand);
+                throw;
+            }
         }
 
         DriveInfo GetDrive(string driveLetter)
