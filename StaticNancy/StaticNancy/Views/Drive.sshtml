@@ -35,13 +35,17 @@ var drive = "@Model.Drive";
 var rootUrl = getRootUrl(window.location.href);
 var url = rootUrl + drive + "/status";
 
-var request = new XMLHttpRequest();
-request.onload = function () {
-	showStatus(request.responseText);
-}
+getStatus();
 
-request.open("GET", url, true);
-request.send();	
+function getStatus(){
+	var request = new XMLHttpRequest();
+	request.onload = function () {
+		showStatus(request.responseText);
+	}
+
+	request.open("GET", url, true);
+	request.send();	
+}
 
 function getRootUrl(locationHref) {
     var i = locationHref.indexOf('/drive');
@@ -54,16 +58,15 @@ function getRootUrl(locationHref) {
 }
 
 function showStatus(statusText){
-	var d = JSON.parse(statusText);
-	if (d.mounted){
-		document.getElementById("btn").textContent="Unmount";
+	var drive = JSON.parse(statusText);
+	var caption = "Nope";
+	if (drive.mounted){
+		caption = "Unmount";
 	}
-	else if (d.canMount){
-		document.getElementById("btn").textContent="Mount";
+	else if (drive.canMount){
+		caption = "Mount";
 	}
-	else {
-		document.getElementById("btn").textContent="Nope";
-	}
+    document.getElementById("btn").textContent = caption;
 }
 
 function onClick(){
@@ -72,17 +75,17 @@ function onClick(){
 
 	var request = new XMLHttpRequest();
 	request.onload = function () {
-		//showStatus(request.responseText);
 		var status = request.status; // HTTP response status, e.g., 200 for "200 OK"
 		if (status == 200){
 			document.getElementById("progress").textContent="Done";
+			showStatus(request.responseText);
 		}
 		else {
 			document.getElementById("progress").textContent="Error " + status;
 		}
 	}
 
-	document.getElementById("progress").textContent="Mounting...";
+	document.getElementById("progress").textContent = document.getElementById("btn").textContent + "ing...";
 	request.open(method, url, shouldBeAsync);
 	request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 	request.send();	//postData);

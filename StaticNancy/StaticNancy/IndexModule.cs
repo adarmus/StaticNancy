@@ -104,12 +104,12 @@ namespace StaticNancy
             if (model.Exists)
             {
                 _drive.DoUnmount(model.Drive);
-                response = HttpStatusCode.OK;
+                response = Response.AsJson<object>(new { mounted = false, canMount = true });
             }
             else if (model.CanMount)
             {
                 _drive.DoMount(model.Drive);
-                response = HttpStatusCode.OK;
+                response = Response.AsJson<object>(new { mounted = true, canMount = false });
             }
             else
             {
