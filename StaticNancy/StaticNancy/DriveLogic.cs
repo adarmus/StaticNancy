@@ -19,6 +19,7 @@ namespace StaticNancy
         public DriveLogic(NancyServiceConfigurationSection config)
         {
             _config = config;
+            _log = new TraceLogger("DriveLogic");
 
             //Test("\"aaa bbb\" cc dd");
             //Test("aaa bbb cc dd");
