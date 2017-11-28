@@ -5,7 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Nancy;
+using Nancy.Bootstrapper;
 using Nancy.Conventions;
+using Nancy.TinyIoc;
 using StaticNancy.Config;
 using StaticNancy.Conventions;
 using StaticNancy.Logging;
@@ -19,6 +21,19 @@ namespace StaticNancy
         public NancyBootstrapper()
         {
             _log = new TraceLogger("Bootstrapper");
+        }
+
+        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+        {
+            base.ApplicationStartup(container, pipelines);
+
+            pipelines.OnError.AddItemToEndOfPipeline(OnError);
+        }
+
+        private object OnError(NancyContext context, Exception ex)
+        {
+            _log.WriteLineError(context.Request.Url.ToString(), ex);
+            return null;
         }
 
         protected override IRootPathProvider RootPathProvider
