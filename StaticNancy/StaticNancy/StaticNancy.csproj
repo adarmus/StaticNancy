@@ -58,6 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\DriveCollection.cs" />
+    <Compile Include="Config\DriveElement.cs" />
     <Compile Include="Conventions\ConfigBasedStaticContentsConventionsProvider.cs" />
     <Compile Include="Config\ConfigReader.cs" />
     <Compile Include="Config\NancyServiceConfigurationSection.cs" />
