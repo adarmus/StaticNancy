@@ -53,5 +53,13 @@ namespace StaticNancy.Config
             get { return (ResourceProviderCollection)this["resourceProviders"]; }
             set { this["resourceProviders"] = value; }
         }
+
+        [ConfigurationCollection(typeof(DriveCollection))]
+        [ConfigurationProperty("drives")]
+        public DriveCollection Drives
+        {
+            get { return (DriveCollection)this["drives"]; }
+            set { this["drives"] = value; }
+        }
     }
 }
