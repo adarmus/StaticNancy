@@ -16,7 +16,7 @@ namespace StaticNancy.Config
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            return ((DriveElement)element).Drive;
+            return ((DriveElement)element).Letter;
         }
 
         public new IEnumerator<DriveElement> GetEnumerator()

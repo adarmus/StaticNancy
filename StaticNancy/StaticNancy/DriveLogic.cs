@@ -33,28 +33,44 @@ namespace StaticNancy
             GetCommandArgs(input, out file, out args);
         }
 
+        DriveElement GetDriveConfig(string letter)
+        {
+            var drive = _config.Drives.FirstOrDefault(d => string.Equals(d.Letter, letter, StringComparison.CurrentCultureIgnoreCase));
+            return drive;
+        }
+
         public void DoMount(string letter)
         {
-            if (string.IsNullOrEmpty(_config.DriveMountCommand))
+            var drive = GetDriveConfig(letter);
+
+            if (drive == null)
                 return;
 
-            RunCommand(_config.DriveMountCommand);
+            if (string.IsNullOrEmpty(drive.DriveMountCommand))
+                return;
+
+            RunCommand(drive.DriveMountCommand, drive.DrivePwd);
         }
 
         public void DoUnmount(string letter)
         {
-            if (string.IsNullOrEmpty(_config.DriveUnmountCommand))
+            var drive = GetDriveConfig(letter);
+
+            if (drive == null)
                 return;
 
-            RunCommand(_config.DriveUnmountCommand);
+            if (string.IsNullOrEmpty(drive.DriveUnmountCommand))
+                return;
+
+            RunCommand(drive.DriveUnmountCommand, drive.DrivePwd);
         }
 
-        void RunCommand(string encCommand)
+        void RunCommand(string encCommand, string pwd)
         {
             try
             {
                 var cipher = new Cipher();
-                string command = cipher.DecryptUsingPassword(encCommand, _config.DrivePwd);
+                string command = cipher.DecryptUsingPassword(encCommand, pwd);
                 _log.WriteLineDebug("CMD {0}", command);
 
                 string file;
@@ -106,7 +122,9 @@ namespace StaticNancy
         {
             string letter = driveLetter.Substring(0, 1);
 
-            if (!string.Equals(letter, _config.Drive, StringComparison.CurrentCultureIgnoreCase))
+            var drive = GetDriveConfig(letter);
+
+            if (drive == null)
             {
                 return new DriveInfo
                 {

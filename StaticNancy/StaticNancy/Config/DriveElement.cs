@@ -9,11 +9,11 @@ namespace StaticNancy.Config
 {
     class DriveElement : ConfigurationElement
     {
-        [ConfigurationProperty("drive", IsRequired = true)]
-        public string Drive
+        [ConfigurationProperty("letter", IsRequired = true)]
+        public string Letter
         {
-            get { return (string)this["drive"]; }
-            set { this["drive"] = value; }
+            get { return (string)this["letter"]; }
+            set { this["letter"] = value; }
         }
 
         [ConfigurationProperty("drivePwd", IsRequired = true)]
