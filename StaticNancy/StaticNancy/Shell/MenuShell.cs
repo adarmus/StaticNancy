@@ -41,6 +41,9 @@ namespace StaticNancy.Shell
                     case ConsoleKey.D4:
                         Encrypt();
                         break;
+                    case ConsoleKey.D5:
+                        Decrypt();
+                        break;
                     default:
                         showMenu = false;
                         break;
@@ -52,6 +55,12 @@ namespace StaticNancy.Shell
         {
             var console = new CryptoShell();
             console.Encrypt();
+        }
+
+        void Decrypt()
+        {
+            var console = new CryptoShell();
+            console.Decrypt();
         }
 
         void Install()
