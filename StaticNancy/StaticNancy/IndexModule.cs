@@ -27,9 +27,9 @@ namespace StaticNancy
             _drive = new DriveLogic(_config);
 
             this.Get["/Index", runAsync: true] = this.OnIndex;
-            this.Get["/Drive/{drive}", runAsync: true] = this.OnDrivePage;
-            this.Get["/Drive/{drive}/status", runAsync: true] = this.OnDriveStatusGet;
-            this.Post["/Drive/{drive}/status", runAsync: true] = this.OnDriveStatusPost;
+            this.Get["/Drives/{drive}", runAsync: true] = this.OnDrivePage;
+            this.Get["/Drives/{drive}/status", runAsync: true] = this.OnDriveStatusGet;
+            this.Post["/Drives/{drive}/status", runAsync: true] = this.OnDriveStatusPost;
         }
 
         private Task<object> OnIndex(object parameters, CancellationToken token)

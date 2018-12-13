@@ -48,11 +48,11 @@ function getStatus(){
 }
 
 function getRootUrl(locationHref) {
-    var i = locationHref.indexOf('/drive');
+    var i = locationHref.indexOf('/drives');
     if (i < 0) {
         return locationHref;
     } else {
-        var root = locationHref.substring(0, i + 6);
+        var root = locationHref.substring(0, i + 7);
         return root.concat('/');
     }
 }
